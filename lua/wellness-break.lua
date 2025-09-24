@@ -8,6 +8,7 @@ local config = {
   min_keystrokes = 200,
   max_keystrokes = 300,
   break_duration = 20, -- seconds
+  keystroke_mode = "all", -- "all" or "insert_only"
   messages = {
     "💧 Time to drink some water!",
     "🚶 Take a quick walk around!",
@@ -192,12 +193,23 @@ function M.setup(user_config)
   -- Set up autocommand to count keystrokes
   vim.api.nvim_create_augroup("WellnessBreak", { clear = true })
 
-  -- Monitor all keystrokes using KeyPress event
+  -- Monitor keystrokes using KeyPress event
   vim.on_key(function(key, typed)
+    -- Check if we should count keystrokes based on the mode setting
+    local should_count = false
+
+    if config.keystroke_mode == "all" then
+      should_count = true
+    elseif config.keystroke_mode == "insert_only" then
+      local mode = vim.api.nvim_get_mode().mode
+      should_count = (mode == "i" or mode == "R" or mode == "Rv")
+    end
+
     -- Only count actual keystrokes, not special keys like <Esc>, <CR>, etc
     -- Count printable characters and common editing keys
     if
       not state.is_break_active
+      and should_count
       and (
         (typed and typed ~= "") -- Any typed character
         or key:match("^[%w%p%s]$") -- Alphanumeric, punctuation, or space

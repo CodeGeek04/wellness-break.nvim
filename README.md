@@ -43,6 +43,7 @@ require("wellness-break").setup({
   min_keystrokes = 200,     -- Minimum keystrokes before break
   max_keystrokes = 300,     -- Maximum keystrokes before break
   break_duration = 20,      -- Break duration in seconds
+  keystroke_mode = "all",   -- "all" or "insert_only" - when to count keystrokes
   messages = {              -- Custom break messages
     "💧 Time to drink some water!",
     "🚶 Take a quick walk around!",
@@ -55,6 +56,12 @@ require("wellness-break").setup({
   },
 })
 ```
+
+### Configuration Options
+
+- `keystroke_mode`: Controls when keystrokes are counted toward break triggers
+  - `"all"` (default): Count keystrokes in all modes (normal, insert, visual, etc.)
+  - `"insert_only"`: Only count keystrokes when in insert mode (i, R, Rv)
 
 ## Commands
 
